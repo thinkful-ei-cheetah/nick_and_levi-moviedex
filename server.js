@@ -22,32 +22,33 @@ app.use(function validateBearerToken(req, res, next) {
   next()
 })
 
-const validTypes = [`Bug`, `Dark`, `Dragon`, `Electric`, `Fairy`, `Fighting`, `Fire`, `Flying`, `Ghost`, `Grass`, `Ground`, `Ice`, `Normal`, `Poison`, `Psychich`, `Rock`, `Steel`, `Water`]
+app.get('/movie', handleGetMovies)
 
-app.get('/types', function handleGetTypes(req, res) {
-  res.json(validTypes)
-})
+function handleGetMovies(req, res) {
+  let moviesRes = movies;
+  let {genre, country, avg_vote} = req.query;
 
-app.get('/pokemon', function handleGetPokemon(req, res) {
-  let response = POKEDEX.pokemon;
-
-  // filter our pokemon by name if name query param is present
-  if (req.query.name) {
-    response = response.filter(pokemon =>
-      // case insensitive searching
-      pokemon.name.toLowerCase().includes(req.query.name.toLowerCase())
+  if (genre) {
+    moviesRes = moviesRes.filter(movie =>
+      movie.genre.toLowerCase().includes(genre.toLowerCase())
     )
   }
 
-  // filter our pokemon by type if type query param is present
-  if (req.query.type) {
-    response = response.filter(pokemon =>
-      pokemon.type.includes(req.query.type)
+  if (country) {
+    moviesRes = moviesRes.filter(movie =>
+      movie.country.toLowerCase().includes(country.toLowerCase())
     )
   }
 
-  res.json(response)
-})
+  if (avg_vote) {
+    avg_vote = Number(avg_vote);
+    moviesRes = moviesRes.filter(movie => {
+        return movie.avg_vote >= avg_vote;
+    })
+  }
+
+  res.json(moviesRes)
+}
 
 const PORT = 8000
 
