@@ -38,6 +38,10 @@ function handleGetMovies(req, res) {
   let moviesRes = movies;
   let {genre, country, avg_vote} = req.query;
 
+  if(!country) {
+    res.status(400).send('Bad Request')
+  }
+
   if (genre) {
     moviesRes = moviesRes.filter(movie =>
       movie.genre.toLowerCase().includes(genre.toLowerCase())
