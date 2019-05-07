@@ -5,7 +5,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
-const movies = require('./movies.json');
+const MOVIES = require('./movies.json');
 
 const app = express();
 
@@ -29,7 +29,7 @@ app.use(function validateBearerToken(req, res, next) {
 app.get('/movie', handleGetMovies);
 
 function handleGetMovies(req, res) {
-  let moviesRes = movies;
+  let moviesRes = MOVIES.movies;
   let {genre, country, avg_vote} = req.query;
 
   if (genre) {
